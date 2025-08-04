@@ -150,7 +150,7 @@ export default function LandingPage() {
           <p className="text-sm text-amber-700">
             <strong>Disclaimer:</strong> This platform provides educational content only and is not a substitute for professional medical advice.
           </p>
-        </div>
+    </div>
       </footer>
     </div>
   )

@@ -39,6 +39,12 @@ export default function Navigation() {
             >
               AI Assistant
             </Link>
+            <Link 
+              href="/profile" 
+              className="text-amber-800 hover:text-amber-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-amber-200/50"
+            >
+              Profile
+            </Link>
           </div>
 
           {/* User Section */}

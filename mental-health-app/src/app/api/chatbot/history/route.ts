@@ -1,0 +1,108 @@
+import { NextRequest, NextResponse } from 'next/server'
+import { userStore } from '../../../lib/userStore'
+
+// GET - Retrieve chat history for a user
+export async function GET(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const userId = searchParams.get('userId')
+    
+    if (!userId) {
+      return NextResponse.json(
+        { error: 'User ID is required' },
+        { status: 400 }
+      )
+    }
+    
+    const chatHistory = userStore.getChatHistory(userId)
+    
+    return NextResponse.json({
+      chatHistory: chatHistory.map(session => ({
+        id: session.id,
+        title: session.title,
+        createdAt: session.createdAt,
+        lastMessageAt: session.lastMessageAt,
+        messageCount: session.messages.length,
+        lastMessage: session.messages[session.messages.length - 1]?.content?.substring(0, 100) + '...' || 'No messages yet'
+      }))
+    })
+
+  } catch (error) {
+    console.error('❌ Chat history retrieval error:', error)
+    return NextResponse.json(
+      { error: `Failed to retrieve chat history: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 500 }
+    )
+  }
+}
+
+// POST - Create new chat session
+export async function POST(req: NextRequest) {
+  try {
+    const { userId, title } = await req.json()
+    
+    if (!userId || !title) {
+      return NextResponse.json(
+        { error: 'User ID and title are required' },
+        { status: 400 }
+      )
+    }
+    
+    const sessionId = userStore.createChatSession(userId, title)
+    
+    if (!sessionId) {
+      return NextResponse.json(
+        { error: 'Failed to create chat session' },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json({
+      sessionId,
+      success: true
+    })
+
+  } catch (error) {
+    console.error('❌ Chat session creation error:', error)
+    return NextResponse.json(
+      { error: `Failed to create chat session: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 500 }
+    )
+  }
+}
+
+// DELETE - Delete a chat session
+export async function DELETE(req: NextRequest) {
+  try {
+    const { searchParams } = new URL(req.url)
+    const userId = searchParams.get('userId')
+    const sessionId = searchParams.get('sessionId')
+    
+    if (!userId || !sessionId) {
+      return NextResponse.json(
+        { error: 'User ID and session ID are required' },
+        { status: 400 }
+      )
+    }
+    
+    const success = userStore.deleteChatSession(userId, sessionId)
+    
+    if (!success) {
+      return NextResponse.json(
+        { error: 'Failed to delete chat session' },
+        { status: 400 }
+      )
+    }
+
+    return NextResponse.json({
+      success: true
+    })
+
+  } catch (error) {
+    console.error('❌ Chat session deletion error:', error)
+    return NextResponse.json(
+      { error: `Failed to delete chat session: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { status: 500 }
+    )
+  }
+} 

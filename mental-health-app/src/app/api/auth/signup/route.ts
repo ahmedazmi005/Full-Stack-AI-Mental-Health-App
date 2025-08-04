@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { userStore, User } from '../../../lib/userStore'
+import { userStore } from '../../../lib/userStore'
 
 export async function POST(request: NextRequest) {
   try {
@@ -32,15 +32,15 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user using shared store
-    const newUser: User = {
+    // Create user using shared store (profile is created automatically)
+    const newUserData = {
       id: crypto.randomUUID(),
       email,
       password: hashedPassword,
       name
     }
 
-    userStore.create(newUser)
+    userStore.create(newUserData)
 
     return NextResponse.json(
       { message: 'User created successfully' },

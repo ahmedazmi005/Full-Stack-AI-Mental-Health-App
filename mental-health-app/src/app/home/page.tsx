@@ -50,73 +50,94 @@ export default function HomePage() {
             </div>
           </div>
 
-          {/* Action Cards */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-            
-            {/* Learn Card */}
-            <Link href="/dashboard">
-              <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-700 to-yellow-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-4xl text-white">📚</span>
-                </div>
-                <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">Learn</h3>
-                <p className="text-amber-700 leading-relaxed text-center">
-                  Explore comprehensive information about various mental health conditions and treatments.
-                </p>
-                <div className="mt-6 text-center">
-                  <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
-                    Explore Resources
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </Link>
+                                {/* Action Cards */}
+                      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
+                        
+                        {/* Learn Card */}
+                        <Link href="/dashboard">
+                          <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
+                            <div className="w-20 h-20 bg-gradient-to-br from-amber-700 to-yellow-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                              <span className="text-4xl text-white">📚</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">Learn</h3>
+                            <p className="text-amber-700 leading-relaxed text-center">
+                              Explore comprehensive information about various mental health conditions and treatments.
+                            </p>
+                            <div className="mt-6 text-center">
+                              <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
+                                Explore Resources
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
 
-            {/* Chat Card */}
-            <Link href="/chatbot">
-              <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
-                <div className="w-20 h-20 bg-gradient-to-br from-yellow-700 to-amber-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-4xl text-white">💬</span>
-                </div>
-                <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">AI Assistant</h3>
-                <p className="text-amber-700 leading-relaxed text-center">
-                  Get personalized guidance and support with our AI assistant for mental health resource navigation.
-                </p>
-                <div className="mt-6 text-center">
-                  <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
-                    Start Chatting
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </Link>
+                        {/* Chat Card */}
+                        <Link href="/chatbot">
+                          <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
+                            <div className="w-20 h-20 bg-gradient-to-br from-yellow-700 to-amber-600 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                              <span className="text-4xl text-white">💬</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">AI Assistant</h3>
+                            <p className="text-amber-700 leading-relaxed text-center">
+                              Get personalized guidance and support with our AI assistant for mental health resource navigation.
+                            </p>
+                            <div className="mt-6 text-center">
+                              <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
+                                Start Chatting
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
 
-            {/* Support Card */}
-            <Link href="/support">
-              <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
-                <div className="w-20 h-20 bg-gradient-to-br from-amber-600 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
-                  <span className="text-4xl text-white">🤝</span>
-                </div>
-                <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">Support</h3>
-                <p className="text-amber-700 leading-relaxed text-center">
-                  Access professional resources, crisis intervention information, and support networks.
-                </p>
-                <div className="mt-6 text-center">
-                  <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
-                    Get Support
-                    <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-                    </svg>
-                  </span>
-                </div>
-              </div>
-            </Link>
+                        {/* Profile Card */}
+                        <Link href="/profile">
+                          <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
+                            <div className="w-20 h-20 bg-gradient-to-br from-purple-600 to-amber-700 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                              <span className="text-4xl text-white">👤</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">Profile</h3>
+                            <p className="text-amber-700 leading-relaxed text-center">
+                              Track your progress, manage goals, and customize your mental health journey preferences.
+                            </p>
+                            <div className="mt-6 text-center">
+                              <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
+                                View Profile
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
 
-          </div>
+                        {/* Support Card */}
+                        <Link href="/support">
+                          <div className="bg-white rounded-3xl p-8 shadow-xl border border-amber-200 hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer group">
+                            <div className="w-20 h-20 bg-gradient-to-br from-amber-600 to-yellow-700 rounded-2xl flex items-center justify-center mb-6 mx-auto shadow-lg group-hover:scale-110 transition-transform duration-300">
+                              <span className="text-4xl text-white">🤝</span>
+                            </div>
+                            <h3 className="text-2xl font-bold text-amber-900 mb-4 text-center">Support</h3>
+                            <p className="text-amber-700 leading-relaxed text-center">
+                              Access professional resources, crisis intervention information, and support networks.
+                            </p>
+                            <div className="mt-6 text-center">
+                              <span className="inline-flex items-center text-amber-800 font-semibold group-hover:text-amber-900 transition-colors">
+                                Get Support
+                                <svg className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                                </svg>
+                              </span>
+                            </div>
+                          </div>
+                        </Link>
+
+                      </div>
 
           {/* Quick Stats or Additional Info */}
           <div className="mt-16 text-center">
