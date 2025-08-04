@@ -28,7 +28,7 @@ export default function LoginPage() {
       if (result?.error) {
         setError('Invalid email or password')
       } else {
-        router.push('/')
+        router.push('/home')
       }
     } catch (error) {
       setError('An error occurred. Please try again.')
@@ -38,23 +38,35 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#E9C2A6]">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-md">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Sign in to your account
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
-              {error}
+    <div className="min-h-screen bg-gradient-to-br from-amber-50 via-yellow-50 to-orange-50 flex items-center justify-center px-6" style={{backgroundColor: '#E9C2A6'}}>
+      <div className="w-full max-w-md">
+        
+        {/* Logo Header */}
+        <div className="text-center mb-10">
+          <Link href="/" className="inline-flex items-center space-x-3 mb-6">
+            <div className="w-12 h-12 bg-gradient-to-br from-amber-800 to-yellow-700 rounded-xl flex items-center justify-center shadow-lg">
+              <span className="text-white font-bold text-xl">M</span>
             </div>
-          )}
-          
-          <div className="space-y-4">
+            <span className="text-2xl font-bold text-amber-900">Mental Health Awareness</span>
+          </Link>
+          <h1 className="text-3xl font-bold text-amber-900 mb-2">Welcome back</h1>
+          <p className="text-amber-800">Sign in to access your mental health resources</p>
+        </div>
+
+        {/* Form Card */}
+        <div className="bg-white rounded-3xl p-8 shadow-2xl border border-amber-200">
+          <form onSubmit={handleSubmit} className="space-y-6">
+            
+            {error && (
+              <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-center font-medium">
+                {error}
+              </div>
+            )}
+            
             <div>
-              <label htmlFor="email" className="sr-only">Email address</label>
+              <label htmlFor="email" className="block text-sm font-semibold text-amber-900 mb-3">
+                Email address
+              </label>
               <input
                 id="email"
                 name="email"
@@ -62,12 +74,15 @@ export default function LoginPage() {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Email address"
+                className="w-full px-4 py-4 border border-amber-300 rounded-xl text-amber-900 placeholder-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all duration-200"
+                placeholder="Enter your email"
               />
             </div>
+            
             <div>
-              <label htmlFor="password" className="sr-only">Password</label>
+              <label htmlFor="password" className="block text-sm font-semibold text-amber-900 mb-3">
+                Password
+              </label>
               <input
                 id="password"
                 name="password"
@@ -75,29 +90,45 @@ export default function LoginPage() {
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-                placeholder="Password"
+                className="w-full px-4 py-4 border border-amber-300 rounded-xl text-amber-900 placeholder-amber-600 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-all duration-200"
+                placeholder="Enter your password"
               />
             </div>
-          </div>
 
-          <div>
             <button
               type="submit"
               disabled={isLoading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#E9C2A6] hover:bg-[#d4a574] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50"
+              className="w-full bg-gradient-to-r from-amber-800 to-yellow-700 hover:from-amber-900 hover:to-yellow-800 disabled:opacity-50 disabled:cursor-not-allowed text-white py-4 px-6 rounded-xl font-semibold transition-all duration-200 shadow-lg hover:shadow-xl transform hover:-translate-y-1"
             >
-              {isLoading ? 'Signing in...' : 'Sign in'}
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
+                  Signing in...
+                </div>
+              ) : (
+                'Sign In'
+              )}
             </button>
-          </div>
+          </form>
 
-          <div className="text-center">
-            <Link href="/signup" className="text-indigo-600 hover:text-indigo-500">
+          {/* Links */}
+          <div className="mt-8 space-y-4 text-center">
+            <Link 
+              href="/signup" 
+              className="block text-amber-800 hover:text-amber-900 font-semibold transition-colors"
+            >
               Don't have an account? Sign up
             </Link>
+            
+            <Link 
+              href="/" 
+              className="block text-amber-700 hover:text-amber-800 transition-colors"
+            >
+              ← Back to home
+            </Link>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   )
-} 
+}

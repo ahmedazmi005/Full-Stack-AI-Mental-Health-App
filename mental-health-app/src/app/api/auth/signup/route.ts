@@ -1,13 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-
-// In-memory user store (replace with database later)
-const users: Array<{
-  id: string
-  email: string
-  password: string
-  name: string
-}> = []
+import { userStore, User } from '../../../lib/userStore'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,9 +14,15 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Check if user already exists
-    const existingUser = users.find(u => u.email === email)
-    if (existingUser) {
+    if (password.length < 6) {
+      return NextResponse.json(
+        { error: 'Password must be at least 6 characters' },
+        { status: 400 }
+      )
+    }
+
+    // Check if user already exists using shared store
+    if (userStore.exists(email)) {
       return NextResponse.json(
         { error: 'User already exists' },
         { status: 400 }
@@ -33,15 +32,15 @@ export async function POST(request: NextRequest) {
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 12)
 
-    // Create user
-    const newUser = {
+    // Create user using shared store
+    const newUser: User = {
       id: crypto.randomUUID(),
       email,
       password: hashedPassword,
       name
     }
 
-    users.push(newUser)
+    userStore.create(newUser)
 
     return NextResponse.json(
       { message: 'User created successfully' },

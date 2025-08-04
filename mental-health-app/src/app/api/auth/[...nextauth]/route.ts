@@ -1,14 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
-
-// In-memory user store (replace with database later)
-const users: Array<{
-  id: string
-  email: string
-  password: string
-  name: string
-}> = []
+import { userStore } from "../../../lib/userStore"
 
 const handler = NextAuth({
   providers: [
@@ -21,13 +14,16 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log('Missing credentials')
           return null
         }
 
-        // Find user
-        const user = users.find(u => u.email === credentials.email)
+        // Find user in shared store
+        const user = userStore.findByEmail(credentials.email)
+        console.log('User found:', user ? 'Yes' : 'No', 'for email:', credentials.email)
         
         if (user && await bcrypt.compare(credentials.password, user.password)) {
+          console.log('Password match successful')
           return {
             id: user.id,
             email: user.email,
@@ -35,6 +31,7 @@ const handler = NextAuth({
           }
         }
         
+        console.log('Authentication failed')
         return null
       }
     })
