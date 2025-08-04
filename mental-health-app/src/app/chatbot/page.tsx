@@ -18,6 +18,15 @@ interface UsageStats {
   estimatedCostThisMonth: number
 }
 
+interface ChatSession {
+  id: string
+  title: string
+  createdAt: string
+  lastMessageAt: string
+  messageCount: number
+  lastMessage: string
+}
+
 export default function ChatbotPage() {
   const { isAuthenticated, isLoading, user } = useAuth()
   const router = useRouter()
@@ -39,6 +48,12 @@ export default function ChatbotPage() {
   })
   const [rateLimitWarning, setRateLimitWarning] = useState('')
   const messagesEndRef = useRef<HTMLDivElement>(null)
+  
+  // Chat history state
+  const [chatHistory, setChatHistory] = useState<ChatSession[]>([])
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null)
+  const [showHistory, setShowHistory] = useState(false)
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false)
 
   // Suggested prompts to help users get started
   const suggestedPrompts = [
@@ -64,10 +79,11 @@ export default function ChatbotPage() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  // Load usage stats on mount
+  // Load usage stats and chat history on mount
   useEffect(() => {
     if (isAuthenticated) {
       loadUsageStats()
+      loadChatHistory()
     }
   }, [isAuthenticated])
 
