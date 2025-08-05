@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { userStore } from '../../../lib/userStore'
+import { HybridUserStore } from '../../../lib/hybridUserStore'
 
-export async function GET(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const userId = params.userId
-    const user = userStore.findById(userId)
+    const { userId } = await params
+    const user = await HybridUserStore.findById(userId)
     
     if (!user) {
       return NextResponse.json(
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
     }
 
     // Update last active
-    userStore.updateLastActive(userId)
+    await HybridUserStore.updateLastActive(userId)
 
     return NextResponse.json({
       profile: user.profile,
@@ -34,23 +34,26 @@ export async function GET(req: NextRequest, { params }: { params: { userId: stri
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const userId = params.userId
+    const { userId } = await params
     const updates = await req.json()
     
-    const updatedUser = userStore.updateProfile(userId, updates)
+    const success = await HybridUserStore.updateProfile(userId, updates)
     
-    if (!updatedUser) {
+    if (!success) {
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
       )
     }
 
+    // Get the updated user to return the profile
+    const user = await HybridUserStore.findById(userId)
+    
     return NextResponse.json({
       success: true,
-      profile: updatedUser.profile
+      profile: user?.profile
     })
 
   } catch (error) {

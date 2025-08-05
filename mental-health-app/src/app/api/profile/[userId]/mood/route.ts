@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { userStore } from '../../../../lib/userStore'
+import { HybridUserStore } from '../../../../lib/hybridUserStore'
 
-export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const userId = params.userId
+    const { userId } = await params
     const moodData = await req.json()
     
     console.log('=== MOOD ENTRY DEBUG ===')
     console.log('User ID:', userId)
     console.log('Mood data:', moodData)
-    console.log('All users:', userStore.getAll().map(u => ({ id: u.id, email: u.email })))
     
     // Check if user exists
-    const user = userStore.findById(userId)
+    const user = await HybridUserStore.findById(userId)
     if (!user) {
       console.log('❌ User not found with ID:', userId)
-      console.log('Available user IDs:', userStore.getAll().map(u => u.id))
       return NextResponse.json(
         { error: 'User not found' },
         { status: 404 }
@@ -27,26 +25,27 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     console.log('User has mentalHealthData:', !!user.profile?.mentalHealthData)
     console.log('User has moodTracking array:', !!user.profile?.mentalHealthData?.moodTracking)
     
-    const success = userStore.addMoodEntry(userId, moodData)
+    const success = await HybridUserStore.addMoodEntry(userId, moodData)
     
     if (!success) {
-      console.log('❌ addMoodEntry returned false')
+      console.log('❌ Failed to add mood entry')
       return NextResponse.json(
-        { error: 'Failed to save mood entry' },
-        { status: 400 }
+        { error: 'Failed to add mood entry' },
+        { status: 500 }
       )
     }
-
-    console.log('✅ Mood entry saved successfully')
-    console.log('Updated mood tracking length:', user.profile?.mentalHealthData?.moodTracking?.length)
+    
+    console.log('✅ Mood entry added successfully')
+    
     return NextResponse.json({
-      success: true
+      success: true,
+      message: 'Mood entry added successfully'
     })
 
   } catch (error) {
-    console.error('❌ Mood entry creation error:', error)
+    console.error('Mood entry error:', error)
     return NextResponse.json(
-      { error: `Failed to save mood entry: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { error: 'Failed to add mood entry' },
       { status: 500 }
     )
   }

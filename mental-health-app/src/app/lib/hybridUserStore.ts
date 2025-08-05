@@ -343,6 +343,23 @@ export class HybridUserStore {
     return true
   }
 
+  static async updateChatSessionTitle(userId: string, sessionId: string, title: string): Promise<boolean> {
+    await this.initialize()
+    
+    const userIndex = this.users.findIndex(u => u.id === userId)
+    if (userIndex === -1) return false
+    
+    if (!this.users[userIndex].profile.mentalHealthData?.chatHistory) return false
+    
+    const sessionIndex = this.users[userIndex].profile.mentalHealthData.chatHistory.findIndex(s => s.id === sessionId)
+    if (sessionIndex === -1) return false
+    
+    this.users[userIndex].profile.mentalHealthData.chatHistory[sessionIndex].title = title
+    this.users[userIndex].profile.lastActive = new Date().toISOString()
+    await this.saveUsers()
+    return true
+  }
+
   // Migration and admin operations
   static async migrateToS3(): Promise<boolean> {
     if (!S3Service.isConfigured()) {

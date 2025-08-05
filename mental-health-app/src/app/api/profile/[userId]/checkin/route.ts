@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { userStore } from '../../../../lib/userStore'
+import { HybridUserStore } from '../../../../lib/hybridUserStore'
 
-export async function POST(req: NextRequest, { params }: { params: { userId: string } }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ userId: string }> }) {
   try {
-    const userId = params.userId
+    const { userId } = await params
     const checkinData = await req.json()
     
     console.log('=== WEEKLY CHECKIN DEBUG ===')
@@ -11,7 +11,7 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     console.log('Checkin data:', checkinData)
     
     // Check if user exists
-    const user = userStore.findById(userId)
+    const user = await HybridUserStore.findById(userId)
     if (!user) {
       console.log('❌ User not found with ID:', userId)
       return NextResponse.json(
@@ -22,25 +22,27 @@ export async function POST(req: NextRequest, { params }: { params: { userId: str
     
     console.log('✅ User found:', { id: user.id, email: user.email })
     
-    const success = userStore.addWeeklyCheckin(userId, checkinData)
+    const success = await HybridUserStore.addWeeklyCheckin(userId, checkinData)
     
     if (!success) {
-      console.log('❌ addWeeklyCheckin returned false')
+      console.log('❌ Failed to add weekly check-in')
       return NextResponse.json(
         { error: 'Failed to save weekly check-in' },
-        { status: 400 }
+        { status: 500 }
       )
     }
-
+    
     console.log('✅ Weekly check-in saved successfully')
+    
     return NextResponse.json({
-      success: true
+      success: true,
+      message: 'Weekly check-in saved successfully'
     })
 
   } catch (error) {
-    console.error('❌ Weekly check-in creation error:', error)
+    console.error('Weekly check-in error:', error)
     return NextResponse.json(
-      { error: `Failed to save weekly check-in: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { error: 'Failed to save weekly check-in' },
       { status: 500 }
     )
   }
