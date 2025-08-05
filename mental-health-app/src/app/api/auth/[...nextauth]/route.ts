@@ -1,7 +1,7 @@
 import NextAuth from "next-auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 import bcrypt from "bcryptjs"
-import { userStore } from "../../../lib/userStore"
+import { HybridUserStore } from "../../../lib/hybridUserStore"
 
 const handler = NextAuth({
   providers: [
@@ -18,27 +18,31 @@ const handler = NextAuth({
           return null
         }
 
-        // Find user in shared store
-        const user = userStore.findByEmail(credentials.email)
-        console.log('User found:', user ? 'Yes' : 'No', 'for email:', credentials.email)
-        
-        if (user && await bcrypt.compare(credentials.password, user.password)) {
-          console.log('Password match successful')
-          return {
-            id: user.id,
-            email: user.email,
-            name: user.name
+        try {
+          // Find user in hybrid store
+          const user = await HybridUserStore.findByEmail(credentials.email)
+          console.log('User found:', user ? 'Yes' : 'No', 'for email:', credentials.email)
+          
+          if (user && await bcrypt.compare(credentials.password, user.password)) {
+            console.log('Password match successful')
+            return {
+              id: user.id,
+              email: user.email,
+              name: user.name
+            }
           }
+          
+          console.log('Authentication failed')
+          return null
+        } catch (error) {
+          console.error('NextAuth authorize error:', error)
+          return null
         }
-        
-        console.log('Authentication failed')
-        return null
       }
     })
   ],
   pages: {
-    signIn: '/login',
-    signUp: '/signup'
+    signIn: '/login'
   },
   session: {
     strategy: "jwt"
@@ -56,7 +60,9 @@ const handler = NextAuth({
       }
       return session
     }
-  }
+  },
+  secret: process.env.NEXTAUTH_SECRET,
+  debug: process.env.NODE_ENV === 'development',
 })
 
 export { handler as GET, handler as POST } 
