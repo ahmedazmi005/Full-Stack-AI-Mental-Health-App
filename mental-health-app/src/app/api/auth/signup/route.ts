@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import bcrypt from 'bcryptjs'
-import { userStore } from '../../../lib/userStore'
+import { HybridUserStore } from '../../../lib/hybridUserStore'
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,7 +22,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Check if user already exists using shared store
-    if (userStore.exists(email)) {
+    const existingUser = await HybridUserStore.findByEmail(email)
+    if (existingUser) {
       return NextResponse.json(
         { error: 'User already exists' },
         { status: 400 }
@@ -40,7 +41,7 @@ export async function POST(request: NextRequest) {
       name
     }
 
-    userStore.create(newUserData)
+    await HybridUserStore.create(newUserData)
 
     return NextResponse.json(
       { message: 'User created successfully' },

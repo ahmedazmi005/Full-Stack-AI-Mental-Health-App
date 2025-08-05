@@ -28,7 +28,7 @@ export default function Navigation() {
               Home
             </Link>
             <Link 
-              href="/dashboard" 
+              href="/learn" 
               className="text-amber-800 hover:text-amber-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-amber-200/50"
             >
               Learn
@@ -44,6 +44,12 @@ export default function Navigation() {
               className="text-amber-800 hover:text-amber-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-amber-200/50"
             >
               Profile
+            </Link>
+            <Link 
+              href="/support" 
+              className="text-amber-800 hover:text-amber-900 font-medium transition-colors px-3 py-2 rounded-lg hover:bg-amber-200/50"
+            >
+              🤝 Support
             </Link>
           </div>
 
