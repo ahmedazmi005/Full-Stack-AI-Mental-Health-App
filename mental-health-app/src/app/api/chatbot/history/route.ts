@@ -39,23 +39,45 @@ export async function GET(req: NextRequest) {
 // POST - Create a new chat session
 export async function POST(req: NextRequest) {
   try {
+    console.log('=== CHAT SESSION CREATION DEBUG ===')
+    
     const { userId, title } = await req.json()
+    console.log('Request data:', { userId, title })
     
     if (!userId || !title) {
+      console.log('❌ Missing required fields:', { userId: !!userId, title: !!title })
       return NextResponse.json(
         { error: 'User ID and title are required' },
         { status: 400 }
       )
     }
     
+    // Check if user exists first
+    const user = await HybridUserStore.findById(userId)
+    if (!user) {
+      console.log('❌ User not found with ID:', userId)
+      return NextResponse.json(
+        { error: 'User not found' },
+        { status: 404 }
+      )
+    }
+    
+    console.log('✅ User found:', { id: user.id, email: user.email })
+    console.log('User has profile:', !!user.profile)
+    console.log('User has mentalHealthData:', !!user.profile?.mentalHealthData)
+    
     const sessionId = await HybridUserStore.createChatSession(userId, title)
+    console.log('Session creation result:', sessionId)
     
     if (!sessionId) {
+      console.log('❌ createChatSession returned null')
       return NextResponse.json(
-        { error: 'Failed to create chat session' },
+        { error: 'Failed to create chat session - session ID is null' },
         { status: 500 }
       )
     }
+    
+    console.log('✅ Chat session created successfully:', sessionId)
     
     return NextResponse.json({
       success: true,
@@ -64,9 +86,14 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('Chat session creation error:', error)
+    console.error('❌ Chat session creation error:', error)
+    console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+    
     return NextResponse.json(
-      { error: 'Failed to create chat session' },
+      { 
+        error: 'Failed to create chat session',
+        details: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }

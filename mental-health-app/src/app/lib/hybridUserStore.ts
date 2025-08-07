@@ -257,39 +257,67 @@ export class HybridUserStore {
 
   // Chat history operations
   static async createChatSession(userId: string, title: string): Promise<string | null> {
-    await this.initialize()
-    
-    const userIndex = this.users.findIndex(u => u.id === userId)
-    if (userIndex === -1) return null
-    
-    // Ensure structure exists
-    if (!this.users[userIndex].profile.mentalHealthData) {
-      this.users[userIndex].profile.mentalHealthData = {
-        favoriteResources: [],
-        moodTracking: [],
-        achievements: [],
-        weeklyCheckins: [],
-        chatHistory: []
+    try {
+      console.log('=== HybridUserStore.createChatSession DEBUG ===')
+      console.log('Input:', { userId, title })
+      
+      await this.initialize()
+      console.log('✅ Store initialized')
+      
+      const userIndex = this.users.findIndex(u => u.id === userId)
+      console.log('User index found:', userIndex)
+      
+      if (userIndex === -1) {
+        console.log('❌ User not found in store')
+        console.log('Available user IDs:', this.users.map(u => u.id))
+        return null
       }
+      
+      console.log('✅ User found at index:', userIndex)
+      
+      // Ensure structure exists
+      if (!this.users[userIndex].profile.mentalHealthData) {
+        console.log('Creating mentalHealthData structure')
+        this.users[userIndex].profile.mentalHealthData = {
+          favoriteResources: [],
+          moodTracking: [],
+          achievements: [],
+          weeklyCheckins: [],
+          chatHistory: []
+        }
+      }
+      
+      if (!this.users[userIndex].profile.mentalHealthData.chatHistory) {
+        console.log('Creating chatHistory array')
+        this.users[userIndex].profile.mentalHealthData.chatHistory = []
+      }
+      
+      const sessionId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+      console.log('Generated session ID:', sessionId)
+      
+      const newSession = {
+        id: sessionId,
+        title,
+        createdAt: new Date().toISOString(),
+        lastMessageAt: new Date().toISOString(),
+        messages: []
+      }
+      
+      console.log('Created session object:', newSession)
+      
+      this.users[userIndex].profile.mentalHealthData.chatHistory.unshift(newSession)
+      this.users[userIndex].profile.lastActive = new Date().toISOString()
+      
+      console.log('Session added to user data, saving...')
+      await this.saveUsers()
+      console.log('✅ Users saved successfully')
+      
+      return sessionId
+    } catch (error) {
+      console.error('❌ Error in createChatSession:', error)
+      console.error('Error stack:', error instanceof Error ? error.stack : 'No stack trace')
+      return null
     }
-    
-    if (!this.users[userIndex].profile.mentalHealthData.chatHistory) {
-      this.users[userIndex].profile.mentalHealthData.chatHistory = []
-    }
-    
-    const sessionId = `chat_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
-    const newSession = {
-      id: sessionId,
-      title,
-      createdAt: new Date().toISOString(),
-      lastMessageAt: new Date().toISOString(),
-      messages: []
-    }
-    
-    this.users[userIndex].profile.mentalHealthData.chatHistory.unshift(newSession)
-    this.users[userIndex].profile.lastActive = new Date().toISOString()
-    await this.saveUsers()
-    return sessionId
   }
 
   static async saveChatMessage(userId: string, sessionId: string, message: { id: string, role: 'user' | 'assistant', content: string, timestamp: string }): Promise<boolean> {
