@@ -2,6 +2,8 @@
 
 A comprehensive full-stack mental health application providing AI-powered support, crisis intervention, and personalized wellness tracking. Built with modern web technologies and designed with user safety and privacy as top priorities.
 
+Try it out here! https://mentalhealthsupport-three.vercel.app/
+
 ![Next.js](https://img.shields.io/badge/Next.js-15.4.5-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.1.0-blue?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
@@ -185,14 +187,6 @@ This project was built as a comprehensive full-stack demonstration. For contribu
 ## 📄 License
 
 This project is for portfolio and educational purposes. Please respect the mental health resources and crisis information provided.
-
-## 🆘 Crisis Resources
-
-If you or someone you know is in crisis:
-- **Call 988** - Suicide & Crisis Lifeline (US)
-- **Text HOME to 741741** - Crisis Text Line
-- **Call 911** - Emergency Services
-- **International**: Visit [findahelpline.com](https://findahelpline.com)
 
 ## 📞 Contact
 
