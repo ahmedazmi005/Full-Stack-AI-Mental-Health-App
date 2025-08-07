@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { userStore } from '../../../lib/userStore'
+import { HybridUserStore } from '../../../lib/hybridUserStore'
 
 // GET - Retrieve chat history for a user
 export async function GET(req: NextRequest) {
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
       )
     }
     
-    const chatHistory = userStore.getChatHistory(userId)
+    const chatHistory = await HybridUserStore.getChatHistory(userId)
     
     return NextResponse.json({
       chatHistory: chatHistory.map(session => ({
@@ -28,15 +28,15 @@ export async function GET(req: NextRequest) {
     })
 
   } catch (error) {
-    console.error('❌ Chat history retrieval error:', error)
+    console.error('Chat history GET error:', error)
     return NextResponse.json(
-      { error: `Failed to retrieve chat history: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { error: 'Failed to retrieve chat history' },
       { status: 500 }
     )
   }
 }
 
-// POST - Create new chat session
+// POST - Create a new chat session
 export async function POST(req: NextRequest) {
   try {
     const { userId, title } = await req.json()
@@ -48,24 +48,25 @@ export async function POST(req: NextRequest) {
       )
     }
     
-    const sessionId = userStore.createChatSession(userId, title)
+    const sessionId = await HybridUserStore.createChatSession(userId, title)
     
     if (!sessionId) {
       return NextResponse.json(
         { error: 'Failed to create chat session' },
-        { status: 400 }
+        { status: 500 }
       )
     }
-
+    
     return NextResponse.json({
+      success: true,
       sessionId,
-      success: true
+      message: 'Chat session created successfully'
     })
 
   } catch (error) {
-    console.error('❌ Chat session creation error:', error)
+    console.error('Chat session creation error:', error)
     return NextResponse.json(
-      { error: `Failed to create chat session: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { error: 'Failed to create chat session' },
       { status: 500 }
     )
   }
@@ -85,23 +86,24 @@ export async function DELETE(req: NextRequest) {
       )
     }
     
-    const success = userStore.deleteChatSession(userId, sessionId)
+    const success = await HybridUserStore.deleteChatSession(userId, sessionId)
     
     if (!success) {
       return NextResponse.json(
-        { error: 'Failed to delete chat session' },
-        { status: 400 }
+        { error: 'Failed to delete chat session or session not found' },
+        { status: 404 }
       )
     }
-
+    
     return NextResponse.json({
-      success: true
+      success: true,
+      message: 'Chat session deleted successfully'
     })
 
   } catch (error) {
-    console.error('❌ Chat session deletion error:', error)
+    console.error('Chat session deletion error:', error)
     return NextResponse.json(
-      { error: `Failed to delete chat session: ${error instanceof Error ? error.message : 'Unknown error'}` },
+      { error: 'Failed to delete chat session' },
       { status: 500 }
     )
   }
